@@ -1,0 +1,14 @@
+name: COLINA2
+channels:
+- defaults
+dependencies:
+- python     = 3.11
+- jupyter    = 1.1.1
+- jupyterlab = 4.3.4
+- matplotlib = 3.10.0
+- numpy      = 1.26.4
+- pandas     = 2.2.3
+- pytables   = 3.10.2
+- scipy      = 1.15.2
+- pip        = 25.0
+- pytorch    = 2.1
