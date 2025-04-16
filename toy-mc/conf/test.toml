@@ -1,0 +1,30 @@
+n_events = 1000
+output   = "demo/"
+
+[geometry]
+buffer = 5.0
+
+  [geometry.wire_plane]
+  wire_pitch    = 5.0
+  wire_r        = 5e-3
+  wire_rotation = 45.0
+  n_wires       = 14
+
+  [geometry.sipm_plane]
+  sipm_size    = 6.0
+  sipm_area    = 34.8075 # 5.85 * 5.95
+  sipm_gap     = 0.5
+  n_sipms_side = 10
+
+  [geometry.el_gap]
+  el_r         = 32.0
+  el_gap_front =  5.0
+  el_gap_back  =  5.0
+
+[sim_params]
+dep_energy  = 41557.5
+w_i         = 15.6
+light_yield = 30
+el_range    = 40e-3
+cloud_r     = 20e-3
+fano_factor = 0.05
