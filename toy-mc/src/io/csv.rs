@@ -5,7 +5,7 @@ use nalgebra::DMatrix;
 use nalgebra::RowDVector;
 use itertools::Itertools;
 
-use crate::Event;
+use crate::{Event, SimConfig};
 
 fn _row_as_str(row: RowDVector<usize>) -> String {
     #[allow(unstable_name_collisions)]
@@ -65,7 +65,7 @@ pub fn write_header(file: &mut File, n_wires: usize, img_size: usize) -> io::Res
     file.write_all(line.as_bytes())
 }
 
-pub fn write_event(file: &mut File, event: &Event) -> io::Result<()> {
+fn write_event(file: &mut File, event: &Event) -> io::Result<()> {
     let mut line = String::new();
     line.push_str(&event.number    .to_string()); line.push(' ');
     line.push_str(&event.position.x.to_string()); line.push(' ');
@@ -73,6 +73,14 @@ pub fn write_event(file: &mut File, event: &Event) -> io::Result<()> {
     line.push_str(&vec_as_str(&event.wire_q)   ); line.push(' ');
     line.push_str(&img_as_str_1d(&event.img)   ); line.push('\n');
     file.write_all(line.as_bytes())
+}
+
+pub fn get_writer(filename: &str, conf: &SimConfig) -> Box<dyn FnMut(&Event) -> io::Result<()>> {
+    let mut file = File::create(filename).unwrap();
+    write_header(&mut file, conf.geometry.wire_plane.n_wires, conf.geometry.sipm_plane.n_sipms_side).unwrap();
+    Box::new( move |e: &Event| {
+        write_event(&mut file, e)
+    })
 }
 
 #[cfg(test)]
