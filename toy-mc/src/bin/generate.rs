@@ -7,8 +7,9 @@ use clap::Parser;
 
 use toymc::{Image, Event, SimConfig};
 use toymc::io::write_conf;
-use toymc::io::csv::{write_header, write_event, write_img_1d};
+use toymc::io::{writer, write_img_1d, Writer};
 use toymc::simulation::{generate_el_position, generate_electrons, propagate_to_wire, propagate_light};
+
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -23,6 +24,9 @@ struct CLI {
     #[arg(short, long)]
     output: Option<String>,
 
+    #[arg(short, long, value_enum, default_value_t=Writer::Csv)]
+    format: Writer,
+
     #[arg(long, action)]
     detailed: bool,
 }
@@ -35,13 +39,13 @@ fn main() -> io::Result<()> {
     let path = Path::new(&conf.output);
     if !path.exists() { create_dir(path)?; }
 
+    let filename_img  = "images.".to_string() + match args.format {
+        Writer::Csv     =>     "csv",
+        Writer::Feather => "feather",
+    };
+    let filename_img  = path.join(        &filename_img).to_str().unwrap().to_owned();
     let filename_conf = path.join(           "run.conf").to_str().unwrap().to_owned();
-    let filename_img  = path.join(         "images.csv").to_str().unwrap().to_owned();
     let filename_fine = path.join("detailed_images.csv").to_str().unwrap().to_owned();
-
-    write_conf(&filename_conf, &conf)?;
-    let mut file_evt  = File::create(filename_img)?;
-    let mut file_fine = if args.detailed { Some(File::create(filename_fine)?) } else { None };
 
     let wires      = &conf.geometry.wire_plane;
     let sipms      = &conf.geometry.sipm_plane;
@@ -50,8 +54,12 @@ fn main() -> io::Result<()> {
     let all_wires  = wires.wire_pos();
     let first_wire = all_wires.first().unwrap().clone();
     let rotation   = Rotation2::new(-wires.wire_rotation);
+    let sipm_bins  = sipms.sipm_bins();
 
-    write_header(&mut file_evt, wires.n_wires, sipms.n_sipms_side)?;
+    write_conf(&filename_conf, &conf)?;
+    let mut write_event = writer(&filename_img, args.format, &conf);
+    let mut file_fine   = if args.detailed { Some(File::create(filename_fine)?) } else { None };
+
 
     let n_fine = (elgap.el_r*2.0).ceil() as usize + 1;
     let fine_bins : Vec<f64> =
@@ -84,7 +92,7 @@ fn main() -> io::Result<()> {
             }
         }
         let event = Event{number: ievt, position: evt_pos, wire_q, img: img.finalize()};
-        write_event(&mut file_evt, &event)?;
+        write_event(&event)?;
 
         if args.detailed {
             let n = fine_bins.len() - 1;
