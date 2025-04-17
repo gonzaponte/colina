@@ -61,10 +61,11 @@ fn main() -> io::Result<()> {
     let mut file_fine   = if args.detailed { Some(File::create(filename_fine)?) } else { None };
 
 
-    let n_fine = (elgap.el_r*2.0).ceil() as usize + 1;
+    let edge   = sipm_bins.first().unwrap();
+    let n_fine = 100;
     let fine_bins : Vec<f64> =
-        (0..n_fine).into_iter()
-        .map(|i| -elgap.el_r + (i as f64))
+        (0..=n_fine).into_iter()
+        .map(|i| edge - (i as f64 / n_fine as f64)*2.0*edge)
         .collect();
 
     let bar      = ProgressBar::new(conf.n_events as u64);
