@@ -85,7 +85,7 @@ fn main() -> io::Result<()> {
             wire_q[iwire] += 1;
             let wire = all_wires.get(iwire).unwrap();
             let wire = point!(*wire, p0.y, 0.0);
-            let hits = propagate_light(p1, wire, params.light_yield, conf.geometry.buffer, wires.wire_r);
+            let hits = propagate_light(p1, wire, params.light_yield, conf.geometry.buffer + elgap.el_gap_back, wires.wire_r);
             let hits = hits.iter().map(|h| rotation * h).collect::<Vec<Point2<_>>>();
             for hit in &hits {
                 img.fill(hit);
