@@ -10,7 +10,10 @@ clean:
     cargo clean
 
 debug *args:
-    cargo run -- {{args}}
+    cargo run           --bin generate -- {{args}}
 
 release *args:
-    cargo run --release -- {{args}}
+    cargo run --release --bin generate -- {{args}}
+
+picture *args:
+    cargo run           --bin picture  -- {{args}}
