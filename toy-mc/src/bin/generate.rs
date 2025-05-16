@@ -1,6 +1,6 @@
 use std::io;
 use std::path::Path;
-use std::fs::{create_dir, File};
+use std::fs::{create_dir_all, File};
 use nalgebra::{point, Point2, Rotation2, DMatrix};
 use indicatif::ProgressBar;
 use clap::Parser;
@@ -37,7 +37,7 @@ fn main() -> io::Result<()> {
                          .unwrap()
                          .overrides(args.nevt, args.output);
     let path = Path::new(&conf.output);
-    if !path.exists() { create_dir(path)?; }
+    if !path.exists() { create_dir_all(path).expect("Could not create directoty"); }
 
     let filename_img  = "images.".to_string() + match args.format {
         Writer::Csv     =>     "csv",
