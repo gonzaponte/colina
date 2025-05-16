@@ -29,7 +29,7 @@ pub fn propagate_to_wire(p0: Point2<f64>, wire_pitch: f64, first_wire: f64, wire
     (point!(x + wire_pos, p0.y, z), n_wire as usize)
 }
 
-fn is_shadowed(p0: &Point3<f64>, pwire: &Point3<f64>, wire_r: f64, cos_th: f64, phi: f64) -> bool {
+pub fn is_shadowed(p0: &Point3<f64>, pwire: &Point3<f64>, wire_r: f64, cos_th: f64, phi: f64) -> bool {
     let sin_th = (1.0 - cos_th.powi(2)).sqrt();
     let axis   = vector!(    pwire.x - p0.x, pwire.z - p0.z);
     let ray    = vector!(sin_th * phi.cos(),         cos_th);
