@@ -24,6 +24,9 @@ struct CLI {
     #[arg(short, long)]
     output: Option<String>,
 
+    #[arg(short, long)]
+    label: Option<String>,
+
     #[arg(short, long, value_enum, default_value_t=Writer::Csv)]
     format: Writer,
 
@@ -39,13 +42,17 @@ fn main() -> io::Result<()> {
     let path = Path::new(&conf.output);
     if !path.exists() { create_dir_all(path).expect("Could not create directoty"); }
 
-    let filename_img  = "images.".to_string() + match args.format {
-        Writer::Csv     =>     "csv",
-        Writer::Feather => "feather",
+    let label = match args.label {
+        Some(l) => format!("_{l}"),
+        None    => String::new(),
     };
-    let filename_img  = path.join(        &filename_img).to_str().unwrap().to_owned();
-    let filename_conf = path.join(           "run.conf").to_str().unwrap().to_owned();
-    let filename_fine = path.join("detailed_images.csv").to_str().unwrap().to_owned();
+    let filename_img  = format!("images{}.", label) + &args.format.extension();
+    let filename_conf = "run.conf".to_string();
+    let filename_fine = format!("detailed_images{}.csv", label);
+
+    let filename_img  = path.join( &filename_img).to_str().unwrap().to_owned();
+    let filename_conf = path.join(&filename_conf).to_str().unwrap().to_owned();
+    let filename_fine = path.join(&filename_fine).to_str().unwrap().to_owned();
 
     let wires      = &conf.geometry.wire_plane;
     let sipms      = &conf.geometry.sipm_plane;
@@ -92,6 +99,7 @@ fn main() -> io::Result<()> {
                 if args.detailed { img_fine.as_mut().unwrap().fill(hit); }
             }
         }
+        let evt_pos = rotation * evt_pos;
         let event = Event{number: ievt, position: evt_pos, wire_q, img: img.finalize()};
         write_event(&event)?;
 

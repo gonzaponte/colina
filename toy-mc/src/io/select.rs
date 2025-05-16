@@ -11,6 +11,15 @@ pub enum Writer {
     Feather,
 }
 
+impl Writer {
+    pub fn extension(&self) -> String {
+        match *self {
+            Writer::Csv     => "csv",
+            Writer::Feather => "feather",
+        }.to_string()
+    }
+}
+
 pub fn writer(filename: &str, format: Writer, conf: &SimConfig) -> Box<dyn FnMut(&Event) -> io::Result<()>> {
     match format {
         Writer::Csv     =>     csv_writer(filename, conf),
