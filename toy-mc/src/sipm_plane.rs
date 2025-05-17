@@ -27,14 +27,14 @@ impl SipmPlane {
 
     pub fn sipm_bins(&self) -> Vec<f64> {
         let v = self.sipm_pos();
-        let inner_bins = [ -self.sipm_size/2. - self.sipm_gap/2.
+        let inner_bins = [ -self.sipm_pitch()/2.
                          , -self.sipm_size/2.
                          ,  self.sipm_size/2.];
         let mut bins : Vec<f64> =
             v.iter    ()
              .flat_map(|p| inner_bins.into_iter().map(move |ip| p + ip))
              .collect ();
-        bins.push(bins.last().unwrap() + self.sipm_size/2. + self.sipm_gap/2.);
+        bins.push(bins.last().unwrap() + self.sipm_pitch()/2.);
         bins
     }
 }
