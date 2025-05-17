@@ -15,11 +15,11 @@ impl SipmPlane {
     }
 
     pub fn sipm_pos(&self) -> Vec<f64> {
-        let n = self.n_sipms_side/2;
+        let n      = self.n_sipms_side;
+        let offset = n as f64 * self.sipm_pitch() / 2.0;
         let mut v : Vec<f64> =
             (0..n).into_iter()
-                  .map      (|i| (i as f64  + 0.5) * self.sipm_pitch())
-                  .flat_map (|p| [-p, p].into_iter())
+                  .map      (|i| (i as f64  + 0.5) * self.sipm_pitch() - offset)
                   .collect  ();
         v.sort_unstable_by(|a, b| a.partial_cmp(b).unwrap());
         v
