@@ -34,7 +34,7 @@ impl SipmPlane {
             v.iter    ()
              .flat_map(|p| inner_bins.into_iter().map(move |ip| p + ip))
              .collect ();
-        bins.push(bins.last().unwrap() + self.sipm_pitch()/2.);
+        bins.push(bins.last().unwrap() + self.sipm_gap/2.);
         bins
     }
 }
