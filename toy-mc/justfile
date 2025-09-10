@@ -17,3 +17,8 @@ release *args:
 
 picture *args:
     cargo run           --bin picture  -- {{args}}
+
+run-all-confs diam:
+    for tt in train test;do echo 3x3 0.20 $tt;just release --conf conf/pcolina-3x3-0.20-{{diam}}um.toml -o ../data/pcolina/3x3/0.20/{{diam}}um/ -n 1000000 --label $tt;done
+    for tt in train test;do echo 3x3 0.65 $tt;just release --conf conf/pcolina-3x3-0.65-{{diam}}um.toml -o ../data/pcolina/3x3/0.65/{{diam}}um/ -n 1000000 --label $tt;done
+    for tt in train test;do echo 6x6 0.50 $tt;just release --conf conf/pcolina-6x6-0.50-{{diam}}um.toml -o ../data/pcolina/6x6/0.50/{{diam}}um/ -n 1000000 --label $tt;done

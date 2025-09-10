@@ -6,7 +6,7 @@ buffer = 3.0
 
   [geometry.wire_plane]
   wire_pitch    = 5.0
-  wire_r        = 5e-3
+  wire_r        = 12.5e-3
   wire_rotation = 45.0
   n_wires       = 14
 

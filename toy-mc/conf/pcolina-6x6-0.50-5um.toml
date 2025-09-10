@@ -6,15 +6,15 @@ buffer = 3.0
 
   [geometry.wire_plane]
   wire_pitch    = 5.0
-  wire_r        = 5e-3
+  wire_r        = 2.5e-3
   wire_rotation = 45.0
   n_wires       = 14
 
   [geometry.sipm_plane]
-  sipm_size    = 3.0
-  sipm_area    = 9.0
-  sipm_gap     = 0.65
-  n_sipms_side = 10
+  sipm_size    = 6.0
+  sipm_area    = 34.8075 # 5.85 * 5.95
+  sipm_gap     = 0.5
+  n_sipms_side = 5
 
   [geometry.el_gap]
   el_r         = 16.0
